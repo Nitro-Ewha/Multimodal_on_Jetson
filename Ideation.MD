@@ -1,4 +1,4 @@
-#Ideation
+# Ideation
 ## 🔑 Key Words
 - Jetson
 - AI Accelerator
