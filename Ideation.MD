@@ -2,12 +2,12 @@
 ## 🔑 Key Words
 - Jetson
 - AI Accelerator
-- Vision Model Optimization
+- Vision Model Optimization   
 
 
 
 ## 👥 누구를 위해?
-**AI 비전 모델을 임베디드 환경(Jetson)에서 활용하고자 하는 연구자 및 개발자**   
+**AI 비전 모델을 임베디드 환경(Jetson)에서 활용하고자 하는 연구자 및 개발자**    
 
 
 
