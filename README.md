@@ -13,8 +13,8 @@
 
 ## 기술 스택
 
-HW: Verilog, RTL Design, NVIDIA Jetson   
-SW: PyTorch/TensorFlow, CUDA
+**HW**: Verilog, RTL Design, NVIDIA Jetson   
+**SW**: PyTorch/TensorFlow, CUDA
 
 
 
