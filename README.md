@@ -16,6 +16,3 @@
 **HW**: Verilog, RTL Design, NVIDIA Jetson   
 **SW**: PyTorch/TensorFlow, CUDA
 
-test
-
-
