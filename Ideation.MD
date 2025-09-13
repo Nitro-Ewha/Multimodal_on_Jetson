@@ -22,7 +22,17 @@
 - 선택된 비전 모델(NanoSAM 등)의 **핵심 연산 분석 및 가속기 설계**   
 - Jetson 보드에서의 **실험 및 성능 검증**   
 
-
+- **SW Optimization**
+  - **모델 경량화 (Model Compression)**
+    - Pruning: 중요하지 않은 weight 제거  
+    - Quantization: FP32 → FP16 / INT8 변환 (특히 TensorRT INT8)  
+    - Knowledge Distillation: 대형 모델 → 소형 모델 지식 전이  
+  - **추론 최적화 (Inference Optimization)**
+    - Graph Optimization (ONNX Runtime, TensorRT)  
+    - Mixed Precision Inference (FP16 활용)  
+  - **아키텍처 최적화 (Architecture-level)**
+    - Efficient Architectures: MobileNet, EfficientNet 같은 경량 모델  
+    - Fusion 전략 조정 (Early Fusion vs. Late Fusion) → modality 통합 연산 효율화
 
 ## 🚀 무엇을 만들려고 하는가?
 - Jetson 기반으로 동작하는 **End-to-End AI Vision Accelerator**    
