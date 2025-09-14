@@ -1,8 +1,8 @@
 # Ideation
 ## 🔑 Key Words
-**- NVIDIA Jetson**
-**- Multimodal**
-**- Optimization**
+**- NVIDIA Jetson**   
+**- Multimodal**   
+**- Optimization**   
 
 
 ## 👥 누구를 위해?
