@@ -31,7 +31,7 @@ Jetson Nano와 같이 컴퓨팅 자원이 제한된 소형 임베디드 시스�
     - Fusion 전략 조정 (Early Fusion vs. Late Fusion) → modality 통합 연산 효율화
 
 - **HW Optimization**
-  - **프로파일러(ex: Nsight System)**를 사용해 목표하는 task의 병목이 어디서 발생하는지 분석
+  - **프로파일러(ex: Nsight System)를 사용해 목표하는 task의 병목이 어디서 발생하는지 분석**
     - GPU 사용률, 메모리 사용량, Streaming Multiprocessor (SM) 사용률, 텐서 코어 사용량 등 [3]
     - 크게 세 가지 메트릭으로 나누어 측정할 수 있음
       1. **SoC 수준 메트릭**
@@ -46,8 +46,7 @@ Jetson Nano와 같이 컴퓨팅 자원이 제한된 소형 임베디드 시스�
       3. **커널 수준 메트릭**
         1) Launch Stats: Kernel launch에 소요된 시간
         2) Sync Time: Kernel 동기화에 소요된 시간   
-
-  - **시뮬레이터**를 사용해 병목 분석 및 아키텍처 수정
+  - **시뮬레이터를 사용해 병목 분석 및 아키텍처 수정**
     - 시뮬레이터에서 자유롭게 Configuration 및 알고리즘을 수정하여, 시나리오 별 성능 비교 분석
       - Configuration에는 총 SM의 개수, 메모리 파티션의 개수, 공유 메모리의 크기, 메모리 접근 latency 등을 자유롭게 수정 가능
       - 새로운 아키텍처를 제안하게 될 경우, 시뮬레이터의 코드를 수정하여 기존 코드로 벤치마크를 돌렸을 때와의 성능 비교
