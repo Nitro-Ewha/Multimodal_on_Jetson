@@ -35,17 +35,17 @@
     - GPU 사용률, 메모리 사용량, Streaming Multiprocessor (SM) 사용률, 텐서 코어 사용량 등 [3]
     - 크게 세 가지 메트릭으로 나누어 측정할 수 있음
       1. **SoC 수준 메트릭**
-        - Throughput: 단위 시간 당 처리된 총 이미지 수
-        - Power: 와트 단위 전력 소비량
+        &nbsp - Throughput: 단위 시간 당 처리된 총 이미지 수
+        &nbsp - Power: 와트 단위 전력 소비량
       2. **GPU 수준 메트릭**
-        - GPU Utilization: GPU 연산 시간
-        - GPU Memory: GPU 메모리 사용량
-        - SM 발생 사이클: Instruction이 발행된 SM의 사이클
-        - SM 활성 사이클: 최소 하나의 워프를 가지는 SM의 사이클
-        - TC (Tensor Core) Utilization: TC 활성 사이클/총 사이클 (%)
+        &nbsp - GPU Utilization: GPU 연산 시간
+        &nbsp - GPU Memory: GPU 메모리 사용량
+        &nbsp - SM 발생 사이클: Instruction이 발행된 SM의 사이클
+        &nbsp - SM 활성 사이클: 최소 하나의 워프를 가지는 SM의 사이클
+        &nbsp - TC (Tensor Core) Utilization: TC 활성 사이클/총 사이클 (%)
       3. **커널 수준 메트릭**
-        - Launch Stats: Kernel launch에 소요된 시간
-        - Sync Time: Kernel 동기화에 소요된 시간   
+        &nbsp - Launch Stats: Kernel launch에 소요된 시간
+        &nbsp - Sync Time: Kernel 동기화에 소요된 시간   
   - **시뮬레이터를 사용해 병목 분석 및 아키텍처 수정**
     - 시뮬레이터에서 자유롭게 Configuration 및 알고리즘을 수정하여, 시나리오 별 성능 비교 분석
       - Configuration에는 총 SM의 개수, 메모리 파티션의 개수, 공유 메모리의 크기, 메모리 접근 latency 등을 자유롭게 수정 가능
