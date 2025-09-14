@@ -11,8 +11,8 @@ Jetson Nano와 같이 컴퓨팅 자원이 제한된 소형 임베디드 시스�
 
 ## 🎯 누구의 어떤 문제를 해결하기 위해?
 - 멀티모달 대형 모델의 등장은 AI 기술의 혁신을 불러일으켰으며, 이는 임베디드 및 엣지 디바이스로 확장되며 혁신적인 어플리케이션들이 개발될 수 있는 토대가 되어주었다.
-- 이러한 물결 속에서 온디바이스 멀티모달 대형 모델의 수요가 급증하였으나, 하드웨어 리소스가 제한된 엣지 디바이스에서 효율적이고 정확한 추론을 달성하는 것은 여전히 중요한 연구 과제로 남아있다 [^1].
-- 여러 임베디드 시스템 중에서는 FPGA와 비교했을 때 GPU를 탑재하고 있어 더 높은 throughput을 보여 딥러닝 어플리케이션에 적합하고, CUDA 프로그래밍이 가능하여 모델을 쉽게 탑재할 수 있는 NVIDIA의 Jetson이 주목받고 있다. [^2]
+- 이러한 물결 속에서 온디바이스 멀티모달 대형 모델의 수요가 급증하였으나, 하드웨어 리소스가 제한된 엣지 디바이스에서 효율적이고 정확한 추론을 달성하는 것은 여전히 중요한 연구 과제로 남아있다 [1].
+- 여러 임베디드 시스템 중에서는 FPGA와 비교했을 때 GPU를 탑재하고 있어 더 높은 throughput을 보여 딥러닝 어플리케이션에 적합하고, CUDA 프로그래밍이 가능하여 모델을 쉽게 탑재할 수 있는 NVIDIA의 Jetson이 주목받고 있다. [2]
 - 따라서 우리는 모델 경량화 및 추론 최적화와 같은 SW Optimization과, 프로파일링을 통해 멀티모달 연산의 병목을 분석하여 최적화된 하드웨어 아키텍처를 제안하는 HW Optimization과 같이 여러 접근 방법을 Jetson Nano에 적용시켜봄으로써, **온디바이스 멀티모달 대형 모델**의 퍼포먼스를 발전시키고자 한다. 
 
 
@@ -32,7 +32,7 @@ Jetson Nano와 같이 컴퓨팅 자원이 제한된 소형 임베디드 시스�
 
 - **HW Optimization**
   - **프로파일러(ex: Nsight System)**를 사용해 목표하는 task의 병목이 어디서 발생하는지 분석
-    - GPU 사용률, 메모리 사용량, Streaming Multiprocessor (SM) 사용률, 텐서 코어 사용량 등 [^3]
+    - GPU 사용률, 메모리 사용량, Streaming Multiprocessor (SM) 사용률, 텐서 코어 사용량 등 [3]
     - 크게 세 가지 메트릭으로 나누어 측정할 수 있음
       1. **SoC 수준 메트릭**
         1) Throughput: 단위 시간 당 처리된 총 이미지 수
@@ -59,9 +59,9 @@ Jetson Nano와 같이 컴퓨팅 자원이 제한된 소형 임베디드 시스�
 - 최종적으로 **온디바이스 멀티모달 대형 모델**에서의 다양한 최적화 시나리오 비교 분석을 통해, 해당 분야에서의 SOTA를 달성하기 위한 인사이트를 제공하고자 한다. 
 
 
-References
-[^1] Zhu Y, Lu H. Edge-side NPU inference optimization: Adaptation research of multimodal large models on qualcomm platforms. Intelligent Data Analysis. 2025;0(0). doi:10.1177/1088467X251342172
-[^2] Mittal, S. (2019). A survey on optimized implementation of deep learning models on the nvidia jetson platform. Journal of Systems Architecture, 97, 428-442.
-[^3] Chakraborty, A., Tavernier, W., Kourtis, A., Pickavet, M., Oikonomakis, A., & Colle, D. (2025). Profiling Concurrent Vision Inference Workloads on NVIDIA Jetson--Extended. arXiv preprint arXiv:2508.08430.
+References   
+[1] Zhu Y, Lu H. Edge-side NPU inference optimization: Adaptation research of multimodal large models on qualcomm platforms. Intelligent Data Analysis. 2025;0(0). doi:10.1177/1088467X251342172   
+[2] Mittal, S. (2019). A survey on optimized implementation of deep learning models on the nvidia jetson platform. Journal of Systems Architecture, 97, 428-442.   
+[3] Chakraborty, A., Tavernier, W., Kourtis, A., Pickavet, M., Oikonomakis, A., & Colle, D. (2025). Profiling Concurrent Vision Inference Workloads on NVIDIA Jetson--Extended. arXiv preprint arXiv:2508.08430.   
 
 
