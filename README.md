@@ -15,5 +15,5 @@
 
 ## 기술 스택
 
-C/C++, PyTorch/TensorFlow, CUDA
+`C/C++`, `PyTorch/TensorFlow`, `CUDA`
 
