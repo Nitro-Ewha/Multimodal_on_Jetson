@@ -59,7 +59,8 @@ Jetson Nano와 같이 컴퓨팅 자원이 제한된 소형 임베디드 시스�
 - 최종적으로 **온디바이스 멀티모달 대형 모델**에서의 다양한 최적화 시나리오 비교 분석을 통해, 해당 분야에서의 SOTA를 달성하기 위한 인사이트를 제공하고자 한다. 
 
 
-References   
+   
+## References   
 [1] Zhu Y, Lu H. Edge-side NPU inference optimization: Adaptation research of multimodal large models on qualcomm platforms. Intelligent Data Analysis. 2025;0(0). doi:10.1177/1088467X251342172   
 [2] Mittal, S. (2019). A survey on optimized implementation of deep learning models on the nvidia jetson platform. Journal of Systems Architecture, 97, 428-442.   
 [3] Chakraborty, A., Tavernier, W., Kourtis, A., Pickavet, M., Oikonomakis, A., & Colle, D. (2025). Profiling Concurrent Vision Inference Workloads on NVIDIA Jetson--Extended. arXiv preprint arXiv:2508.08430.   
