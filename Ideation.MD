@@ -24,14 +24,14 @@
 - CNN 기반 Vision Encoder → Compute-bound
 - Transformer 기반 Text Encoder → Memory-bound
 - 두 인코더를 독립적으로 실행 시 GPU 리소스가 불균형하게 사용됨
-    → 일부 SM(Stream Multiprocessor) 또는 Memory Controller 유휴 상태 발생
+<br/>    → 일부 SM(Stream Multiprocessor) 또는 Memory Controller 유휴 상태 발생
 
 **제안 기법**
 
 - 각 인코더 커널의 연산 특성을 프로파일링하여 서로 보완적인 (complementary) 자원 사용 패턴을 가진 커널 쌍 선정
 - 두 커널을 단일 fused kernel로 통합하여 실행
-  → 커널 호출 횟수 감소 + context switching overhead 최소화
-  → GPU utilization 극대화 및 latency 단축
+<br/>  → 커널 호출 횟수 감소 + context switching overhead 최소화
+<br/>  → GPU utilization 극대화 및 latency 단축
 
 **구현 방식**
 
@@ -39,7 +39,7 @@
     - Intra-thread Fusion
     - Intra-block Fusion
     - Inter-block Fusion
-      → thread/block 계층별 자원 분배 전략 비교
+<br/>      → thread/block 계층별 자원 분배 전략 비교
         
 - Profiling Metrics (Night System)
     - GPU utilization, SM occupancy, DRAM throughput
@@ -47,7 +47,7 @@
 - 비교 대상: 기존 sequential execution vs fused execution
 
 ## 🚀 무엇을 만들려고 하는가?
-- - Jetson 기반으로 동작하는 온디바이스 멀티모달 대형 모델
+- Jetson 기반으로 동작하는 온디바이스 멀티모달 대형 모델
 - 멀티모달 모델에 경량화, 추론 최적화, 아키텍처 최적화 등 다양한 접근법을 사용하여 엣지 디바이스에서의 성능 비교 분석
 - 멀티모달과 같이 복잡한 연산을 실행하였을 때 하드웨어에서의 병목 분석 및 그에 따른 새로운 아키텍처 제안
 - 최종적으로 **온디바이스 멀티모달 대형 모델**에서의 다양한 최적화 시나리오 비교 분석을 통해, 해당 분야에서의 SOTA를 달성하기 위한 인사이트를 제공
