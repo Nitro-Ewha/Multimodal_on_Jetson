@@ -6,7 +6,7 @@
 
 
 ## 👥 누구를 위해?
-**Jetson Nano**와 같이 컴퓨팅 자원이 제한된 소형 임베디드 시스템에서 계산 복잡도가 높은 **멀티모달(Multimodal) 모델의 실시간 추론**를 수행하고자 하는 엣지 AI 연구원 및 개발자
+**Jetson Nano**와 같이 컴퓨팅 자원이 제한된 소형 임베디드 시스템에서 계산 복잡도가 높은 **멀티모달(Multimodal) 모델의 실시간 추론**을 수행하고자 하는 엣지 AI 연구원 및 개발자
 
 
 ## 🎯 누구의 어떤 문제를 해결하기 위해?
@@ -24,7 +24,7 @@
 - CNN 기반 Vision Encoder → Compute-bound
 - Transformer 기반 Text Encoder → Memory-bound
 - 두 인코더를 독립적으로 실행 시 GPU 리소스가 불균형하게 사용됨
-  → 일부 SM(Stream Multiprocessor) 또는 Memory Controller 유휴 상태 발생
+    → 일부 SM(Stream Multiprocessor) 또는 Memory Controller 유휴 상태 발생
 
 **제안 기법**
 
