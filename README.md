@@ -1,21 +1,30 @@
-# 🤖 Jetson 기반 온디바이스 멀티모달(Multimodal) 대형 모델의 최적화 시나리오 분석
+# 🤖 Optimized Kernel Fusion for Accelerating Multimodal Inference on Edge Device
 
-## 개요
+### 개요
 
-최근 멀티모달 대형 모델이 등장하며 여러 혁신적인 AI 기술들이 개발되었고, 이는 접근성이 높은 소형 임베디드 시스템 및 엣지 디바이스로 확장되며 다양한 AI 어플리케이션 또한 개발될 수 있는 토대가 되어주었습니다.   
-그러나 **컴퓨팅 리소스가 제한된 엣지 디바이스**에서 정확하고 효율적인 추론을 달성하는 것은 여전히 중요한 연구 과제로 남아있으며, 그에 따른 많은 최적화 기법들이 제안되고 있습니다.   
-우리는 이러한 문제를 해결하기 위해 지금까지 제안된 다양한 SW 최적화 기법들을 적용해보고, 프로파일링을 통해 멀티모달 연산의 주요 하드웨어 병목을 분석함으로써, **온디바이스 멀티모달 대형 모델의 퍼포먼스를 높이기 위한 주요 인사이트**를 제공하고자 합니다. 
+최근 멀티모달 대형 모델의 발전으로 텍스트, 이미지, 음성 등 다양한 센서 데이터를 통합 처리하는 AI 응용이 빠르게 확산되고 있다. <br/>
+하지만 Jetson과 같은 임베디드 엣지 디바이스에서는 제한된 연산 자원과 메모리로 인해 이러한 대형 모델을 효율적으로 실행하기 어렵다. 특히, 멀티모달 모델의 여러 인코더 커널이 순차적으로 실행되면서 context switching overhead가 빈번히 발생하고 GPU utilization이 저하되는 현상이 발생한다. <br/>
+본 프로젝트는 이러한 문제를 해결하기 위해, CNN (Compute-bound) 과 Transformer (Memory-bound) 커널을 하나로 결합하는 커널 퓨전 (Kernel Fusion) 기반의 최적화 기법을 제안하고 구현한다. 이를 통해, Jetson 환경에서의 멀티모달 추론 시 GPU 자원 활용률 향상, latency 단축, throughput 개선을 달성하는 것을 목표로 한다.
 
-## 목표
+### 목표
 
-- 엣지 디바이스에서 다양한 멀티모달 모델의 **SW 최적화 기법** 적용 및 분석
-- 멀티모달 워크로드 프로파일링을 통한 **하드웨어 병목** 분석
-- **하드웨어 시뮬레이터**를 사용해 최적의 온디바이스 멀티모달 시나리오 분석
-- 최종적으로 **온디바이스 멀티모달 모델을 위한 최적의 시나리오** 제공
+1. 멀티모달 추론 모델의 커널 특성 분석 및 profiling
+    a. Nsight Systems를 활용하여 각 커널의 SM 활용률, memory throughput 등을 분석
+    b. Memory-bound / Compute-bound 연산 패턴 분류
+2. 커널 퓨전 기반 하드웨어 수준 최적화 구현
+    a. CUDA를 이용해 CNN과 Transformer 기반 연산 커널 직접 구현
+    b. 다양한 fusion 전략 실험
+    c. 커널 호출 횟수 감소 및 context switching overhead 완화
+3. Jetson 환경에서의 성능 평가
+    a. 기존 sequential execution 대비 latency, throughput, GPU utilization 비교
+4. 온디바이스 멀티모달 추론의 최적화 시나리오 제시
+    a. profiling 및 시뮬레이션 결과를 기반으로 Jetson 시리즈에 적합한 최적 커널 구성 및 실행 전략 제안
 
-## 기술 스택
+### 기술 스택
 
-⚙️ **`C/C++`**   
-🤖 **`PyTorch/TensorFlow`**     
-📱 **`CUDA`**
+`C / C++ / Python`
+`PyTorch / TensorFlow`
+`CUDA`
+`NVIDIA Nsight Systems`
+`NVIDIA Jetson`
 
