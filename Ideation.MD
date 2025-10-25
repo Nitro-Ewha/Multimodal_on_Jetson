@@ -1,7 +1,7 @@
 ## 🔑 Key Words
 **- NVIDIA Jetson**   
 **- Multimodal**   
-**- Kernel Fusion** 
+**- Kernel Fusion**   
 **- Embedded GPU Optimization**   
 
 
