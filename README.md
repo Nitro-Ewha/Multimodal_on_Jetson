@@ -3,10 +3,9 @@
 
 ### 개요
 
-최근 멀티모달 대형 모델의 발전으로 텍스트, 이미지, 음성 등 다양한 센서 데이터를 통합 처리하는 AI 응용이 빠르게 확산되고 있다. <br/>
-하지만 Jetson과 같은 임베디드 엣지 디바이스에서는 제한된 연산 자원과 메모리로 인해 이러한 대형 모델을 효율적으로 실행하기 어렵다. 특히, 멀티모달 모델의 여러 인코더 커널이 순차적으로 실행되면서 context switching overhead가 빈번히 발생하고 GPU utilization이 저하되는 현상이 발생한다. <br/>
-본 프로젝트는 이러한 문제를 해결하기 위해, CNN (Compute-bound) 과 Transformer (Memory-bound) 커널을 하나로 결합하는 커널 퓨전 (Kernel Fusion) 기반의 최적화 기법을 제안하고 구현한다. 이를 통해, Jetson 환경에서의 멀티모달 추론 시 GPU 자원 활용률 향상, latency 단축, throughput 개선을 달성하는 것을 목표로 한다.
-<br/>
+최근 Vision-Language (VL) 및 멀티모달 모델의 발전으로 엣지 환경에서도 실시간 멀티모달 인식이 요구되고 있다. 그러나 임베디드 GPU는 연산 자원과 메모리가 제한적이며, 멀티모달 모델 실행 시 다중 커널 병렬 수행 기능이 없어, context switching overhead와 낮은 GPU utilization이 발생한다. 기존 연구들은 Knowledge Distillation, Pruning, Quantization 등 SW 수준의 모델 경량화에 초점을 맞췄지만, 실제 엣지 디바이스 상에서 HW-level 병목을 분석하고 커널 수준 최적화로 성능을 개선하는 접근은 부족하다.<br/>
+따라서 본 연구는 Jetson의 하드웨어 구조적 특성을 고려해, profiling → kernel fusion → performance evaluation 단계를 통해 온디바이스 멀티모달 모델의 효율적 실행 전략을 제시하고자 한다. 
+
 
 ### 목표
 
