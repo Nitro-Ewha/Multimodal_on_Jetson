@@ -1,14 +1,13 @@
 최근 Vision-Language (VL) 및 멀티모달 모델의 발전으로 엣지 환경에서도 실시간 멀티모달 인식이 요구되고 있다. 그러나 임베디드 GPU는 연산 자원과 메모리가 제한적이며, 멀티모달 모델 실행 시 다중 커널 병렬 수행 기능이 없어, context switching overhead와 낮은 GPU utilization이 발생한다. 기존 연구들은 Knowledge Distillation, Pruning, Quantization 등 SW 수준의 모델 경량화에 초점을 맞췄지만, 실제 엣지 디바이스 상에서 HW-level 병목을 분석하고 커널 수준 최적화로 성능을 개선하는 접근은 부족하다.
     따라서 본 연구는 Jetson의 하드웨어 구조적 특성을 고려해, profiling → kernel fusion → performance evaluation 단계를 통해 온디바이스 멀티모달 모델의 효율적 실행 전략을 제시하고자 한다.   
-
+<br/>
 
 ## 👥 누구를 위해?
 - Edge GPU 환경(e.g. Jetson)에서 VLM을 활용하는 연구자 및 ML 엔지니어
 - 실시간 인식 시스템(예: 로봇, AR/VR, 스마트 카메라) 개발자
 - 제한된 전력/자원에서 저지연 Vision-Language AI가 필요한 서비스 운영자
 → Dual Encoder 기반 VLM을 사용하는 연구자 및 개발자
-
-
+<br/>
 
 ## 🎯 누구의 어떤 문제를 해결하기 위해?
 Dual-Encoder 기반 VLM을 사용하는 연구자 및 개발자들은 두 Encoder가  독립적으로 동작함에도 불구하고 실제 inference 과정에서 sequential하게 실행되어 GPU 자원이 비효율적으로 소모되는 문제를 겪고 있다. 특히 Edge GPU (Jetson Nano/Orin 등)에서는 다음 문제가 심각해진다:
@@ -16,8 +15,7 @@ Dual-Encoder 기반 VLM을 사용하는 연구자 및 개발자들은 두 Encode
 - inference latency 증가로 실시간성 저하
 - 전력 대비 성능 효율 감소 → 배터리 기반 장비에서 큰 문제
     본 프로젝트는 두 Encoder가 병렬로 실행되도록 구조를 재설계하고, kernel fusion을 적용하여 불필요한 overhead를 줄임으로써 GPU utilization을 극대화하고 inference latency를 효과적으로 줄이는 것을 목표로 한다.
-
-
+<br/>
 
 ## 🛠 어떤 기술을 사용해서?
 - GPU Kernel Fusion을 통한 launch overhead 및 메모리 패스 축소
@@ -29,7 +27,6 @@ Dual-Encoder 기반 VLM을 사용하는 연구자 및 개발자들은 두 Encode
 **문제 정의** <br/>
 Dual-Encoder 구조의 Vision-Language Model은 구조적으로 Vision Encoder와 Text Encoder가 병렬 실행이 가능함에도 불구하고, 실제 구현에서는 sequential execution이 발생해 GPU 자원 활용률이 낮아지고 전체 inference 시간이 증가하는 문제가 존재한다.
 본 프로젝트는 kernel fusion과 병렬 실행 스케줄링을 통해 GPU utilization을 극대화하고 inference latency를 감소시키는 것을 목표로 한다.
-
 <br/>
 
 **제안 기법**
@@ -55,10 +52,11 @@ Dual-Encoder 구조의 Vision-Language Model은 구조적으로 Vision Encoder�
 5. 병렬 실행 + kernel fusion 조합 → Edge GPU 환경에서 최적화 적용
 6. 성능 측정 (Latency, Utilization, Throughput)
 7. Baseline 대비 성능 개선 평가
+<br/>
 
 ## 🚀 무엇을 만들려고 하는가?
 Dual-Encoder VLM(CLIP/Siglip2)의 Vision/Text encoder를 Edge GPU 상에서 병렬화 및 kernel fusion을 적용하여 inference latency를 줄이는 최적화 시스템을 구현하고자 한다.
-
+<br/>
    
 ## References   
 [1] Zhu Y, Lu H. Edge-side NPU inference optimization: Adaptation research of multimodal large models on qualcomm platforms. Intelligent Data Analysis. 2025;0(0). doi:10.1177/1088467X251342172   
