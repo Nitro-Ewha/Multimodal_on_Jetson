@@ -27,6 +27,7 @@
 `C / C++ / Python` <br/>
 `PyTorch / TensorFlow` <br/>
 `CUDA` <br/>
+`NVIDIA Nsight Compute` <br/>
 `NVIDIA Nsight Systems` <br/>
 `NVIDIA Jetson` <br/>
 
