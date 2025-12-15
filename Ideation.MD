@@ -25,10 +25,13 @@ Dual-Encoder 기반 VLM을 사용하는 연구자 및 개발자들은 두 Encode
 - Nsight Systems / Compute 기반 profiling → 병목 구간 최적화
 - CLIP 및 SigLIP2 Encoder 기반 Edge GPU 실제 실험
 <br/>
-**문제 정의**<br/>
+
+**문제 정의** <br/>
 Dual-Encoder 구조의 Vision-Language Model은 구조적으로 Vision Encoder와 Text Encoder가 병렬 실행이 가능함에도 불구하고, 실제 구현에서는 sequential execution이 발생해 GPU 자원 활용률이 낮아지고 전체 inference 시간이 증가하는 문제가 존재한다.
 본 프로젝트는 kernel fusion과 병렬 실행 스케줄링을 통해 GPU utilization을 극대화하고 inference latency를 감소시키는 것을 목표로 한다.
+
 <br/>
+
 **제안 기법**
 1. **Dual Encoder 병렬 실행 최적화**
     1. Vision Encoder와 Text Encoder의 연산 dependency를 분석
@@ -41,6 +44,7 @@ Dual-Encoder 구조의 Vision-Language Model은 구조적으로 Vision Encoder�
     1. 병렬 실행 + kernel fusion 조합
     2. 실제 GPU active cycle을 증가시키고 idle time을 최소화
 <br/>
+
 **구현 방식**
 1. Baseline Dual-Encoder VLM 모델 선정
 2. Profiling
