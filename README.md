@@ -1,4 +1,4 @@
-# 🤖 Optimized Kernel Fusion for Accelerating Multimodal Inference on Edge Device
+# 🤖 Kernel-Fused Parallel Execution for Accelerating Dual-Encoder Vision-Language Models
 <br/>
 
 ### 개요
