@@ -2,7 +2,7 @@
 
 | 항목 | 내용 |
 | --- | --- |
-| 프로젝트명 | **Kernel-Fused Parallel Execution for Accelerating Dual-Encoder Vision-Language Models** |
+| 프로젝트명 | **Optimized Kernel Fusion for Accelerating Multimodal Inference on Edge Devices** |
 | 프로젝트 키워드 | NVIDIA Jetson, Multimodal, Kernel Fusion, Embedded GPU Optimization |
 | 트랙 | 연구 |
 | 프로젝트 멤버 | 박세진, 박윤형, 강선화 |
@@ -13,4 +13,4 @@
 | 사용할 소프트웨어 패키지의 명칭과 핵심기능/용도 | 1. 멀티모달 모델 프레임워크 <br/>- PyTorch: 멀티모달 모델 로딩 및 추론 <br/>- CUDA/cuDNN: 가속 연산 및 커널 코드 구현 <br/><br/>2. 커널 최적화 및 경량화 툴 <br/>- TensorRT: 모델 경량화 및 inference graph 최적화 <br/>- ONNX / ONNX Runtime: 모델 변환 및 다양한 하드웨어에서 추론 가능 <br/><br/>3. Profiling & 분석 도구 <br/>- Nsight Systems: GPU/CPU layer 별 latency 및 kernel-level utilization 분석 <br/>- Nsight Compute: Kernel level utilization 분석 <br/>- PyTorch Profiler: 연산별 latency와 memory 사용량 분석 <br/>- TorchMetrics: multimodal 성능 평가 |
 | 사용할 소프트웨어 패키지의 명칭과 URL | - PyTorch: https://pytorch.org <br/>- CUDA Toolkit: https://developer.nvidia.com/cuda-toolkit <br/>- TensorRT: https://developer.nvidia.com/tensorrt <br/>- ONNX Runtime: https://onnxruntime.ai <br/>- Nsight Systems: https://developer.nvidia.com/nsight-systems <br/>- Nsight Compute: https://developer.nvidia.com/nsight-compute  <br/>- TorchMetrics: https://lightning.ai/docs/torchmetrics/stable/ |
 | 팀그라운드룰 URL | https://github.com/Nitro-Ewha/Multimodal_on_Jetson/blob/main/GroudRule.MD |
-| 최종수정일 | 2025.12.15. |
+| 최종수정일 | 2026.03.24. |
