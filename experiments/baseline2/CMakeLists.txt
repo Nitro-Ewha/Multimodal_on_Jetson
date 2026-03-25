@@ -9,7 +9,7 @@ set(CMAKE_CUDA_STANDARD 17)
 set(CMAKE_CUDA_ARCHITECTURES "86")
 
 # 실행 파일 이름(baseline_run)과 소스 코드(baseline_qkv.cu) 지정
-add_executable(baseline_run baseline_qkv.cu)
+add_executable(baseline_run main.cu baseline_qkv.cu)
 
 # 상대 경로: experiments/baseline2 에서 3칸 밖으로 나가서 cutlass 찾기
 target_include_directories(baseline_run PRIVATE
