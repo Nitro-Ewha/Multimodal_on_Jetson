@@ -223,9 +223,17 @@ private:
       ConvertShiftK convert_shift_k;
       arch::global_load<ElementOutput, sizeof(ElementOutput)>(fetch_shift_k, access_shift_k, true);
       ElementLayernormCompute shifted_mean =  mean - convert_shift_k(fetch_shift_k);
-      variance = cutlass::constants::one<ElementLayernormCompute>() / cutlass::fast_sqrt(square_mean - shifted_mean * shifted_mean + ElementLayernormCompute(1e-6));
+      // variance = cutlass::constants::one<ElementLayernormCompute>() / cutlass::fast_sqrt(square_mean - shifted_mean * shifted_mean + ElementLayernormCompute(1e-6));
+      // ⭕ 수정 코드 (음수가 되는 것을 강제 방지)
+      ElementLayernormCompute var = square_mean - mean * mean;
+      if (var < ElementLayernormCompute(0)) { var = ElementLayernormCompute(0); }
+      variance = cutlass::constants::one<ElementLayernormCompute>() / cutlass::fast_sqrt(var + ElementLayernormCompute(1e-6));
     }else{
-      variance = cutlass::constants::one<ElementLayernormCompute>() / cutlass::fast_sqrt(square_mean - mean * mean + ElementLayernormCompute(1e-6));
+      // variance = cutlass::constants::one<ElementLayernormCompute>() / cutlass::fast_sqrt(square_mean - mean * mean + ElementLayernormCompute(1e-6));
+      // 🌟 [추가] 일반적인 LayerNorm(else 블록)에서도 음수 방지 처리!
+      ElementLayernormCompute var = square_mean - mean * mean;
+      if (var < ElementLayernormCompute(0)) { var = ElementLayernormCompute(0); }
+      variance = cutlass::constants::one<ElementLayernormCompute>() / cutlass::fast_sqrt(var + ElementLayernormCompute(1e-6));
     }
 
     mean = -mean * variance;
@@ -306,6 +314,8 @@ public:
 
     typename ElementwiseFunctor::Params   elementwise;
     TensorRefD                            ref_C;
+    TensorRefD                            ref_Bias;     // bias를 위한 TensorRef 추가
+    TensorRefD                            ref_Residual;   // Residual을 위한 TensorRef 추가
     TensorRefD                            ref_D;
     ElementVariance                       *ptr_Variance;
     ElementMean                           *ptr_Mean;
@@ -325,6 +335,8 @@ public:
     Arguments(
       typename ElementwiseFunctor::Params   elementwise_,
       TensorRefD                            ref_C_,
+      TensorRefD                            ref_Bias_,    // 생성자 인자에 bias를 위한 TensorRef 추가
+      TensorRefD                            ref_Residual_, // Residual을 위한 TensorRef 추가
       TensorRefD                            ref_D_,
       ElementVariance                       *ptr_Variance,
       ElementMean                           *ptr_Mean_,
@@ -332,6 +344,8 @@ public:
     ):
       elementwise(elementwise_),
       ref_C(ref_C_),
+      ref_Bias(ref_Bias_),    // 멤버 변수 초기화
+      ref_Residual(ref_Residual_),
       ref_D(ref_D_),
       ptr_Variance(ptr_Variance),
       ptr_Mean(ptr_Mean_),
@@ -345,8 +359,12 @@ public:
 
     typename ElementwiseFunctor::Params   elementwise;
     typename OutputTileIterator::Params   params_C;
+    typename OutputTileIterator::Params   params_Bias;   // Bias 메모리 레이아웃(Stride) 파라미터
+    typename OutputTileIterator::Params   params_Residual;   // Residual 메모리 레이아웃(Stride) 파라미터
     typename OutputTileIterator::Params   params_D;
     typename OutputTileIterator::Element *ptr_C;
+    typename OutputTileIterator::Element *ptr_Bias;   // Bias 데이터 포인터
+    typename OutputTileIterator::Element *ptr_Residual;   // Residual 데이터 포인터
     typename OutputTileIterator::Element *ptr_D;
     ElementVariance                       *ptr_Variance;
     ElementMean                           *ptr_Mean;
@@ -358,6 +376,8 @@ public:
     CUTLASS_HOST_DEVICE
     Params():
       ptr_D(nullptr),
+      ptr_Bias(nullptr),
+      ptr_Residual(nullptr),
       ptr_Variance(nullptr),
       ptr_Mean(nullptr)
     {
@@ -368,8 +388,12 @@ public:
     Params(Arguments const &args):
       elementwise(args.elementwise),
       params_C(args.ref_C.layout()),
+      params_Bias(args.ref_Bias.layout()),   // args.ref_Bias에서 layout(stride) 추출
+      params_Residual(args.ref_Residual.layout()),   // args.ref_Residual에서 layout(stride) 추출
       params_D(args.ref_D.layout()),
       ptr_C(args.ref_C.data()),
+      ptr_Bias(args.ref_Bias.data()),   // args.ref_Bias에서 pointer 추출
+      ptr_Residual(args.ref_Residual.data()),   // args.ref_Residual에서 pointer 추출
       ptr_D(args.ref_D.data()),
       ptr_Variance(args.ptr_Variance),
       ptr_Mean(args.ptr_Mean),
@@ -393,8 +417,12 @@ private:
 
   OutputTileIterator                    iterator_C_;
   OutputTileIterator                    iterator_D_;
+  OutputTileIterator                    iterator_Bias_;   // Bias용 메모리 탐색기
+  OutputTileIterator                    iterator_Residual_;   // Residual용 메모리 탐색기
   typename OutputTileIterator::Fragment fragment_C_;
   typename OutputTileIterator::Fragment fragment_D_;
+  typename OutputTileIterator::Fragment fragment_Bias_;   // Bias용 fragment (Bias 데이터를 담을 레지스터 배열)
+  typename OutputTileIterator::Fragment fragment_Residual_;   // Residual용 fragment (Residual 데이터를 담을 레지스터 배열)
 
   ElementAccumulator                    alpha_;
   ElementAccumulator                    beta_;
@@ -422,7 +450,9 @@ public:
     extent_(problem_size0),
     elementwise_(params.elementwise),
     iterator_C_(params.params_C, params.ptr_C, problem_size0, thread_idx, threadblock_offset),
-    iterator_D_(params.params_D, params.ptr_D, problem_size0, thread_idx, threadblock_offset)
+    iterator_D_(params.params_D, params.ptr_D, problem_size0, thread_idx, threadblock_offset),
+    iterator_Bias_(params.params_Bias, params.ptr_Bias, problem_size0, thread_idx, threadblock_offset),
+    iterator_Residual_(params.params_Residual, params.ptr_Residual, problem_size0, thread_idx, threadblock_offset)
   {
     alpha_ = (params.elementwise.alpha_ptr ? *params.elementwise.alpha_ptr : params.elementwise.alpha);
     beta_ =  (params.elementwise.beta_ptr ? *params.elementwise.beta_ptr : params.elementwise.beta);
@@ -462,7 +492,10 @@ public:
         CUTLASS_PRAGMA_UNROLL
         for (int rid = 0; rid < kRowIterations; ++rid) {
           int row_step_offset = rid * kDeltaRow;
-          int row_offset = thread_offset_row_base + step_offset + row_step_offset;
+          // int row_offset = thread_offset_row_base + step_offset + row_step_offset;
+          // ⭕ 수정 코드 (blockIdx.y 대신 정확한 열 좌표로 타일 인덱스를 구함)
+          int n_tile_idx = thread_offset_.column() / ThreadblockShape::kN;
+          int row_offset = thread_offset_.row() + n_tile_idx * extent_.row();
           bool is_load = (row_offset < extent_.row());
           shift_k_frag_[iter_idx * kRowIterations + rid] = load_shift_k_(row_offset, is_load);
         }
@@ -483,6 +516,17 @@ public:
       iterator_C_.load(fragment_C_);
       ++iterator_C_;
     }
+
+    // Bias 데이터를 레지스터(fragment)로 로드하고 탐색기를 한 칸 전진시킴
+    // (메인 코드에서 Stride를 0으로 줬기 때문에, 전진해도 항상 같은 Bias 값을 가져옴)
+    fragment_Bias_.clear();
+    iterator_Bias_.load(fragment_Bias_);
+    ++iterator_Bias_;
+
+    // Residual 데이터를 레지스터(fragment)로 로드하고 탐색기를 한 칸 전진시킴
+    fragment_Residual_.clear();
+    iterator_Residual_.load(fragment_Residual_);
+    ++iterator_Residual_;
   }
 
   /// Called at the start of a row
@@ -517,13 +561,30 @@ public:
     NumericArrayConverter<ElementLayernormCompute, ElementOutput, kElementsPerAccess> source_converter;
     OutputVector &source_vector = reinterpret_cast<OutputVector *>(&fragment_C_)[frag_idx];
 
+    // 아까 불러온 Bias Fragment에서 현재 계산할 부분(frag_idx)을 가져옴
+    OutputVector &bias_vector = reinterpret_cast<OutputVector *>(&fragment_Bias_)[frag_idx];
+
+    OutputVector &residual_vector = reinterpret_cast<OutputVector *>(&fragment_Residual_)[frag_idx];
+
     bool column_guard = (thread_offset_.column() < extent_.column());
 
+    // 기존의 result = ... 부분을 아래처럼 수정
+    OutputVector math_res;
+    
     if (elementwise_.kScale == cutlass::epilogue::thread::ScaleType::OnlyAlphaScaling) {
-      result = source_converter(elementwise_(accum));
-    }else{
-      result = source_converter(elementwise_(accum, source_vector));
+      math_res = elementwise_(accum);
+    } else {
+      math_res = elementwise_(accum, source_vector); // math_res = alpha*(A@B) + C
     }
+
+    // 🌟 핵심 로직: 계산된 결과에 Bias와 Residual을 더함 (벡터의 요소 개수만큼 언롤링 반복)
+    CUTLASS_PRAGMA_UNROLL
+    for (int i = 0; i < OutputVector::kElements; ++i) {
+      math_res[i] = math_res[i] + bias_vector[i] + residual_vector[i]; // Bias와 Residual을 더해줌
+    }
+
+    // 최종 결과(math_res)를 LayerNorm용 타입으로 캐스팅하여 result에 넣음
+    result = source_converter(math_res);
 
 
     ElementLayernormCompute inv_scalar = cutlass::constants::one<ElementLayernormCompute>() / ElementLayernormCompute(extent_.column());
@@ -569,7 +630,10 @@ public:
     ConvertMeanOutput  convert_mean_output;
 
     bool is_write_thread = (thread_offset_.row() < extent_.row() && (threadIdx.x % kThreadsPerRow) == 0);
-    int row_offset = thread_offset_.row() + blockIdx.y * extent_.row();
+    // int row_offset = thread_offset_.row() + blockIdx.y * extent_.row();
+    // ⭕ 수정 코드 (blockIdx.y 대신 정확한 열 좌표로 타일 인덱스를 구함)
+    int n_tile_idx = thread_offset_.column() / ThreadblockShape::kN;
+    int row_offset = thread_offset_.row() + n_tile_idx * extent_.row();
 
     ElementVariance *curr_ptr_sum_square = params_.ptr_Variance + row_offset;
     ElementMean *curr_ptr_element_sum = params_.ptr_Mean + row_offset;
@@ -862,12 +926,16 @@ public:
       ElementInputA0 * ptr_A,
       ElementInputB0 * ptr_B,
       ElementOutputC0 * ptr_C,
+      ElementOutputC0 * ptr_Bias,   // Bias 데이터 포인터 파라미터 추가
+      ElementOutputC0 * ptr_Residual, // Residual 데이터 포인터 파라미터 추가
       ElementOutputC0 * ptr_D,
       ElementOutputC0 * ptr_E,
       ElementOutputC0 * ptr_O,
       int64_t    ldm_A,
       int64_t    ldm_B,
       int64_t    ldm_C,
+      int64_t    ldm_Bias,    // Bias Stride (ldm) 파라미터 추가
+      int64_t    ldm_Residual,    // Residual Stride (ldm) 파라미터 추가
       int64_t    ldm_D,
       int64_t    ldm_E,
       int64_t    ldm_O,
@@ -890,6 +958,8 @@ public:
         typename EpilogueVisitor::Arguments(
           linear_scaling,
           {ptr_C, ldm_C},
+          {ptr_Bias, ldm_Bias},   // EpilogueVisitor로 Bias 정보 토스
+          {ptr_Residual, ldm_Residual},   // EpilogueVisitor로 Residual 정보 토스
           {ptr_D, ldm_D},
           ref_Variance_.data(),
           ref_Mean_.data(),

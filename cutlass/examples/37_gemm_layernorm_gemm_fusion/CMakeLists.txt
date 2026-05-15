@@ -34,3 +34,8 @@ cutlass_example_add_executable(
   gemm_layernorm.cu
   )
 
+cutlass_example_add_executable(
+  benchmark_gemm_layernorm
+  benchmark_gemm_layernorm.cu
+)
+
