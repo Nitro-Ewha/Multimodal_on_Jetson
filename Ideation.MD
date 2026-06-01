@@ -15,8 +15,8 @@
 
 ## 👥 누구를 위해?
 
-    엣지 GPU 환경에서 Vision Transformer 기반 멀티모달 모델의 추론 성능을 최적화하고자 하는 연구자 및 GPU 기반 AI 시스템 개발자를 대상으로 한다.<br/>
-특히 Jetson과 같은 제한된 하드웨어 환경에서 Vision-Language Model 또는 멀티모달 모델을 실행해야 하는 임베디드 AI 개발자, 그리고 Transformer block 내부의 kernel-level 병목을 분석하고 최적화하려는 시스템 연구자를 주요 타겟 사용자로 설정한다.
+ 엣지 GPU 환경에서 Vision Transformer 기반 멀티모달 모델의 추론 성능을 최적화하고자 하는 연구자 및 GPU 기반 AI 시스템 개발자를 대상으로 한다.<br/>
+ 특히 Jetson과 같은 제한된 하드웨어 환경에서 Vision-Language Model 또는 멀티모달 모델을 실행해야 하는 임베디드 AI 개발자, 그리고 Transformer block 내부의 kernel-level 병목을 분석하고 최적화하려는 시스템 연구자를 주요 타겟 사용자로 설정한다.
 <br/><br/>
 
 ## 🎯 누구의 어떤 문제를 해결하기 위해?
