@@ -26,7 +26,7 @@
 최근 멀티모달 모델은 Vision Transformer 기반 구조를 활용하며, 모델 규모와 visual token 수 증가로 인해 연산량과 메모리 요구량이 크게 증가하고 있다. 그러나 엣지 GPU는 서버급 GPU에 비해 연산 자원과 메모리 대역폭이 제한적이어서, Transformer 추론 시 kernel launch overhead와 DRAM access가 latency 증가의 주요 원인이 된다.<br/>
 특히 QKV Split&Transpose, LayerNorm, Bias/Residual Add와 같은 비-GEMM 연산은 계산량은 작지만 별도 CUDA kernel로 실행되며 반복적인 메모리 접근을 유발한다. TensorRT와 CUTLASS는 일부 연산 패턴에 대해 최적화를 제공하지만, 이러한 비-GEMM 커널 병목을 모두 제거하기에는 한계가 있다.<br/>
 따라서 본 연구는 엣지 GPU 환경에서 발생하는 비-GEMM 커널의 launch overhead와 DRAM access를 주요 병목으로 정의하고, 이를 Kernel Fusion으로 줄이고자 한다.
-<br/>
+<br/><br/>
 
 ## 제안 방법
 
@@ -91,7 +91,7 @@
 - TensorRT 기반 Vision Encoder Block에서 기존 kernel latency를 fused kernel latency로 치환한 결과, block-level latency 감소 확인
 
 이를 통해 엣지 GPU 환경에서 Vision Transformer 추론 시 비-GEMM 커널의 launch overhead와 DRAM access가 주요 병목으로 작용하며, GEMM 인접 비-GEMM 연산을 fused execution path로 흡수하는 것이 Vision Encoder Block 최적화의 핵심 방향임을 확인하였다.
-<br/>
+<br/><br/>
 
 ## 기술 스택
 
