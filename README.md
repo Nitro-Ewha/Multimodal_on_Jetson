@@ -112,3 +112,85 @@
 본 프로젝트는 단순히 모델을 경량화하거나 구조를 변경하는 방식이 아니라, 기존 Vision Transformer 모델의 연산 의미와 출력은 유지하면서 GPU 내부 실행 방식을 최적화하는 시스템 수준의 연구이다.<br/>
 특히 기존 최적화 도구가 충분히 처리하지 못하는 비-GEMM 커널 병목에 집중하여, kernel launch overhead와 DRAM access를 줄이는 방향으로 Transformer block의 실행 구조를 재설계하였다. 이를 통해 제한된 자원을 가진 엣지 GPU 환경에서도 멀티모달 모델의 추론 효율을 개선할 수 있음을 보인다.<br/>
 <br/>
+
+## 소스코드 빌드 방법
+
+**1. Cmake Setting**
+우선 빌드를 위해 Cmake 셋팅을 한다.
+
+- RTX 30XX (Server)
+## 3. Build & Execute CUTLASS
+
+1. **Cmake Setting**
+
+- RTX 30XX (Server)
+
+```bash
+#RTX 30XX Server
+mkdir build && cd build
+cmake .. \
+  -DCMAKE_CUDA_COMPILER=/usr/local/cuda-13.1/bin/nvcc \
+  -DCUTLASS_NVCC_ARCHS=86 \
+  -DCMAKE_CUDA_ARCHITECTURES=86 \
+  -DCUTLASS_ENABLE_EXAMPLES=ON \
+  -DCUTLASS_ENABLE_TESTS=OFF \
+  -DCUTLASS_ENABLE_TOOLS=ON \
+  -DCMAKE_BUILD_TYPE=Release
+```
+
+- Jetson Orin Nano (Edge)
+
+```bash
+#Jetson Orin Nano
+cmake .. \
+  -G "Unix Makefiles" \
+  -DCMAKE_MAKE_PROGRAM=/usr/bin/make \
+  -DCMAKE_CUDA_COMPILER=/usr/local/cuda/bin/nvcc \
+  -DCMAKE_CUDA_HOST_COMPILER=/usr/bin/g++-10 \
+  -DCUTLASS_NVCC_ARCHS=87 \
+  -DCMAKE_CUDA_ARCHITECTURES=87 \
+  -DCUTLASS_ENABLE_EXAMPLES=ON \
+  -DCUTLASS_ENABLE_TESTS=OFF \
+  -DCUTLASS_ENABLE_TOOLS=ON \
+  -DCMAKE_BUILD_TYPE=Release
+  
+#이미 이 부분은 해놔서 건너뛰어도 됨. 만약 새로운 cutlass library를 clone해와서 쓰는 경우 필요
+```
+
+cmake 셋팅이 완료되었다면, 아래 명령어를 통해 Makefile에 **빌드할 타겟**을 셋팅한다.
+
+
+```bash
+# 2. CMakeLists.txt에 타겟 추가 (이미 추가한 적 있으면 스킵)
+echo '
+cutlass_example_add_executable(
+  35_benchmark_qkv
+  benchmark_qkv.cu
+  )' >> ~/cutlass/examples/35_gemm_softmax/CMakeLists.txt
+```
+
+이후 아래 명령어를 통해 빌드 및 실행을 한다.
+
+```bash
+cd ~/cutlass/build
+# Build
+cmake --build . -j$(nproc) --target 35_benchmark_qkv
+# Execute with params (m,n,k,batch size) 
+# 파라미터는 조정 가능 (아래 Testcase 참고!)
+./35_benchmark_qkv --m=1024 --n=512 --k=256 --batch_count=16
+```
+
+### 
+
+실행 시, 아래 표에 있는 파라미터를 자유롭게 조정해볼 수 있다.
+```jsx
+# Testcase 예시. 바로 복붙해서 사용 가능
+# 1. Inference-like (M 작음 → memory-bound)
+./35_benchmark_qkv --seq_len=32 --hidden=4096 --num_heads=32 --head_dim=128 --batch_count=32
+
+# 2. Small K (K 작음 → memory-bound)
+./35_benchmark_qkv --seq_len=1024 --hidden=512 --num_heads=32 --head_dim=128 --batch_count=4
+
+# 3. Training-like (모두 큼 → compute-bound)
+./35_benchmark_qkv --seq_len=1024 --hidden=4096 --num_heads=32 --head_dim=128 --batch_count=4
+```
