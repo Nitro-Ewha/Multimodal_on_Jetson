@@ -119,11 +119,6 @@
 우선 빌드를 위해 Cmake 셋팅을 한다.
 
 - RTX 30XX (Server)
-## 3. Build & Execute CUTLASS
-
-1. **Cmake Setting**
-
-- RTX 30XX (Server)
 
 ```bash
 #RTX 30XX Server
